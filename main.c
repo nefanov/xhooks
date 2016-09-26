@@ -18,7 +18,7 @@ void print_modifiers (uint32_t mask) {
         printf ("Modifier mask: ");
         for (const char **modifier = MODIFIERS ; mask; mask >>= 1, ++modifier) {
                 if (mask & 1)
-                        printf (*modifier);
+                        printf ("%s",*modifier);
         }
         printf ("\n");
         return;
