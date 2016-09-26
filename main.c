@@ -3,6 +3,8 @@
 #include <inttypes.h>
 #include <xcb/xcb.h>
 
+#define GLOB_KEY_DUMMY 'E'
+#define GLOB_KEY_DUMMY_REL 'K'
 
 /* print names of modifiers according to given bitmask */
 
@@ -56,6 +58,73 @@ int main() {
 
         xcb_flush (connection);
 
+        /* event processing */
 
-        return 0;
+        xcb_generic_event_t *event;
+
+        /* loop: while is connection - waiting for the event, triggering the event according to its type */
+
+    while ( (event = xcb_wait_for_event (connection)) ) {
+        switch (event->response_type & ~0x80) {
+            case XCB_EXPOSE: {
+                xcb_expose_event_t *expose = (xcb_expose_event_t *)event;
+
+                printf ("Window %"PRIu32" exposed. Region to be redrawn at location (%"PRIu16",%"PRIu16"), with dimension (%"PRIu16",%"PRIu16")\n",
+                        expose->window, expose->x, expose->y, expose->width, expose->height );
+                break;
+            }
+
+            case XCB_MOTION_NOTIFY: {
+                xcb_motion_notify_event_t *motion = (xcb_motion_notify_event_t *)event;
+
+                printf ("Mouse moved in window %"PRIu32", at coordinates (%"PRIi16",%"PRIi16")\n",
+                        motion->event, motion->event_x, motion->event_y );
+                break;
+            }
+            case XCB_ENTER_NOTIFY: {
+                xcb_enter_notify_event_t *enter = (xcb_enter_notify_event_t *)event;
+
+                printf ("Mouse entered window %"PRIu32", at coordinates (%"PRIi16",%"PRIi16")\n",
+                        enter->event, enter->event_x, enter->event_y );
+                break;
+            }
+            case XCB_LEAVE_NOTIFY: {
+                xcb_leave_notify_event_t *leave = (xcb_leave_notify_event_t *)event;
+
+                printf ("Mouse left window %"PRIu32", at coordinates (%"PRIi16",%"PRIi16")\n",
+                        leave->event, leave->event_x, leave->event_y );
+                break;
+            }
+            case XCB_KEY_PRESS: {
+                xcb_key_press_event_t *kp = (xcb_key_press_event_t *)event;
+                print_modifiers(kp->state);
+                /* print info */
+                printf ("Key %d pressed in window %"PRIu32"\n",kp->detail, kp->event);
+                kp->detail = GLOB_KEY_DUMMY;
+                /* check: */
+                printf ("Symbol %d: changed in window %"PRIu32"\n",kp->detail, kp->event);
+                break;
+            }
+            case XCB_KEY_RELEASE: {
+                xcb_key_release_event_t *kr = (xcb_key_release_event_t *)event;
+                print_modifiers(kr->state);
+
+                printf ("Key %d released in window %"PRIu32"\n",kr->detail, kr->event);
+                kr->detail = GLOB_KEY_DUMMY_REL;
+                /* check: */
+                printf ("Symbol %d: changed in window %"PRIu32"\n",kr->detail, kr->event);
+                break;
+            }
+            default:
+                /* Unknown event type, ignore it */
+                printf ("Unknown event: %"PRIu8"\n",
+                        event->response_type);
+                break;
+        }
+
+        free (event);
+    }
+
+    return 0;
 }
+
