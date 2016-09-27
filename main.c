@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <xcb/xcb.h>
 
+
 #define GLOB_KEY_DUMMY 'E'
 #define GLOB_KEY_DUMMY_REL 'K'
 
