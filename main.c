@@ -13,13 +13,17 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    while (argc > 1) {
-        old = XStringToKeysym(*argv++);
-        new = XStringToKeysym(*argv++);
-        argc--, argc--;
-        old_code = XKeysymToKeycode(display, old);
-        XChangeKeyboardMapping(display, old_code, 1, &new, 1);
-    }
+    /*........*/
+
+    KeySym	oldsym, symbol;
+    int	nF2Keycode;
+
+    /*........*/
+    oldsym = XStringToKeysym ("A");
+    symbol = XStringToKeysym ("B");
+    nF2Keycode = XKeysymToKeycode (display, oldsym);
+    XChangeKeyboardMapping (display, nF2Keycode, 1, &symbol, 1);
+
     XFlush(display);
     XCloseDisplay(display);
     return 0;
