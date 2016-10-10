@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
 
     /*........*/
     oldsym = XStringToKeysym ("A");
-    symbol = XStringToKeysym ("B");
+    symbol = XStringToKeysym ("A");
     nF2Keycode = XKeysymToKeycode (display, oldsym);
     XChangeKeyboardMapping (display, nF2Keycode, 1, &symbol, 1);
 
