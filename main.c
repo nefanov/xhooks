@@ -11,7 +11,7 @@ int chande_sym(const char* old,const char* new) {
         fprintf(stderr, "Can't open display %s\n", XDisplayName(""));
         return 1;
     }
-    
+
     int	nF2Keycode;
 
     KeySym oldsym = XStringToKeysym (old);
