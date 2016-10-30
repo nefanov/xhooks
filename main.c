@@ -4,23 +4,18 @@
 #include <X11/Xatom.h>
 #include <X11/keysym.h>
 
-int main(int argc, char **argv) {
-    KeySym old, new;
-    int old_code;
+/* this function replaces an old symbol in the X keyboard map with the new one */
+int chande_sym(const char* old,const char* new) {
     Display *display;
     if (!(display = XOpenDisplay("")) ) {
         fprintf(stderr, "Can't open display %s\n", XDisplayName(""));
         return 1;
     }
-
-    /*........*/
-
-    KeySym	oldsym, symbol;
+    
     int	nF2Keycode;
 
-    /*........*/
-    oldsym = XStringToKeysym ("A");
-    symbol = XStringToKeysym ("A");
+    KeySym oldsym = XStringToKeysym (old);
+    KeySym symbol = XStringToKeysym (new);
     nF2Keycode = XKeysymToKeycode (display, oldsym);
     XChangeKeyboardMapping (display, nF2Keycode, 1, &symbol, 1);
 
