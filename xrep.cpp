@@ -6,7 +6,7 @@
 int change_sym(char* old,char* curr);
 
 /* EP for table replace*/
-int change_table(vector<char*> old, vector<char*> curr, size_t len) {
+int change_table(string* old, string* curr, size_t len) {
     for (int i=0;i<len;i++)
         if(change_sym(old[i],curr[i]))
             return 1;
@@ -14,7 +14,7 @@ int change_table(vector<char*> old, vector<char*> curr, size_t len) {
 }
 
 /* change_sym implementation */
-int change_sym(char* old,char* curr) {
+int change_sym(string old,string curr) {
     Display *display;
     if (!(display = XOpenDisplay("")) ) {
         fprintf(stderr, "Can't open display %s\n", XDisplayName(""));
@@ -22,8 +22,8 @@ int change_sym(char* old,char* curr) {
     }
 
     int	nrepKeycode;
-    KeySym oldsym = XStringToKeysym (old);
-    KeySym symbol = XStringToKeysym (curr);
+    KeySym oldsym = XStringToKeysym (old.c_str());
+    KeySym symbol = XStringToKeysym (curr.c_str());
     nrepKeycode = XKeysymToKeycode (display, oldsym);
     XChangeKeyboardMapping (display, nrepKeycode, 1, &symbol, 1);
 
