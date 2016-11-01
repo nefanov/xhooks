@@ -1,2 +1,1 @@
-g++ -shared -o libxrep.so -fPIC -c xrep.c -lxcb -lX11
-
+g++ -B "/usr/lib/jvm/java-8-openjdk-amd64/include" -shared -lib  -o libxrep.so -fPIC -c impl.cpp -lxcb -lX11
